@@ -1,0 +1,450 @@
+###########################################
+#					  #
+#		TRIPLE DOKU		  #
+#					  #
+#		   18 Bis		  #
+#					  #
+#  Alessandro De Marzo, Flavio Abbinante  #
+#       Andrea Cillo, Luca Campobasso     #
+#          Gianluca Dell'Aquila	   	  #
+#					  #
+###########################################
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+FUNZIONE inizializza
+
+Dati di INPUT
+grigliaSingola | griglia da inizializzare | matrice di interi
+
+Dati di OUTPUT
+grigliaSingola | griglia inizializzata a 0 | matrice di interi
+
+Dati di LAVORO
+x | indice colonna | intero naturale >= 1 <= 9
+y | indice riga | intero naturale >= 1 <= 9
+
+PSEUDOCODICE
+
+y = 1
+MENTRE y <= 9
+    x = 1
+    MENTRE x <= 9
+        grigliaSingola in riga y colonna x = 0
+        x = x + 1
+    FINE
+    y = y + 1
+FINE
+
+RITORNA grigliaSingola
+
+FINE
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Funzione SalvaPartita
+
+Dati di input:
+nomeFile | nome del file binario di salvataggio utilizzato per salvare le partite | sequenza di caratteri
+partita | dato strutturato contentente le informazioni relative alla partita in corso | dato strutturato di tipo partita
+nomeSalvataggio | nome univoco del salvataggio da scrivere nel file | sequenza di caratteri
+
+
+Dati di output:
+esito | esito dell'operazione di salvataggio | booleano
+salvataggio | salvataggio con i dati relativi alla partita 
+
+
+Dati di lavoro:
+fileBin | file binario per il salvataggio delle partite | file binario
+salvataggio | contiene un solo record di tipo salvataggio, utile per confrontare e per inserire il nuovo salvataggio | dato strutturato di tipo salvataggio 
+
+
+Dati strutturati:
+partita: 
+	tentativiRimasti | numero di tentativi rimasti al giocatore | intero naturale > 0
+	difficolta | difficoltà selezionata dall'utente | intero naturale > 0
+	grigliaUtente | griglia dove l'utente inserisce i numeri | dato strutturato di tipo Griglia
+	grigliaCompleta | soluzione del sudoku | dato strutturato di tipo Griglia
+
+Griglia:
+	ga | Prima griglia del triple doku | matrice di interi 
+	gb | Seconda griglia del triple doku | matrice di interi
+	gc | Terza griglia del triple doku | matrice di interi
+	n | numero di righe di una singola griglia |  intero Naturale
+
+Salvataggio:
+	nome | nome del salvataggio | sequenza di caratteri
+	partita | dato strutturato contentente le informazioni relative alla partita da salvare | dato strutturato di tipo Partita
+
+
+PSEUDOCODICE di salvaPartita
+
+fileBin = apriFile(nomeFile,"a")
+esito = TRUE
+trovato = FALSE
+
+MENTRE ( FEOF(fileBin) OR trovato <> TRUE )
+	salvataggio = leggiRiga(fileBin)
+	SE ( nome di salvataggio = nomeSalvataggio )
+		trovato = TRUE
+	FINE
+FINE
+
+SE (trovato = TRUE)
+	esito = FALSE
+	FINE
+ALTRIMENTI
+	nome di salvataggio = nomeSalvataggio
+	partita di salvataggio = partita
+	scriviFile(salvataggio)
+	FINE
+
+ritorna esito
+FINE
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Funzione caricaPartita
+
+Dati di input:
+nomeFile | nome del file binario di salvataggio utilizzato per salvare le partite | sequenza di caratteri
+nomeCaricamento | nome univoco del caricamento da leggere nel file | sequenza di caratteri
+
+
+Dati di output:
+esito | esito dell'operazione di caricamento | booleano
+partita | dato strutturato contentente le informazioni relative alla partita caricata | dato strutturato di tipo Partita
+
+
+Dati di lavoro:
+fileBin | file binario per il caricamento delle partite | file binario 
+
+
+Dati strutturati:
+partita: 
+	tentativiRimasti | numero di tentativi rimasti al giocatore | intero naturale > 0
+	difficolta | difficoltà selezionata dall'utente | intero naturale > 0
+	grigliaUtente | griglia dove l'utente inserisce i numeri | dato strutturato di tipo Griglia
+	grigliaCompleta | soluzione del sudoku | dato strutturato di tipo Griglia
+
+Griglia:
+	ga | Prima griglia del triple doku | matrice di interi 
+	gb | Seconda griglia del triple doku | matrice di interi
+	gc | Terza griglia del triple doku | matrice di interi
+	n | numero di righe di una singola griglia |  intero Naturale
+
+Caricamento:
+	nome di salvataggio | nome del salvataggio | sequenza di caratteri
+	partita di salvataggio| dato strutturato contentente le informazioni relative alla partita salvata | dato strutturato di tipo Partita
+
+
+PSEUDOCODICE di caricaPartita
+
+fileBin = apriFile(nomeFile,"a")
+esito = TRUE
+trovato = FALSE
+
+MENTRE ( FEOF(fileBin) OR trovato <> TRUE )
+	partita di salvataggio = leggiRiga(fileBin)
+	SE ( nome di salvataggio = nomeCaricamento )
+		trovato = TRUE
+	FINE
+FINE
+
+SE (trovato = TRUE)
+	nomeCaricamento = nome di salvataggio
+	partita = partita di salvataggio
+	FINE
+ALTRIMENTI
+	esito = FALSE
+	FINE
+
+ritorna esito
+
+FINE
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+FUNZIONE sincronizzaQuadranti
+
+Dati di INPUT
+
+Dati di OUTPUT
+
+Dati di LAVORO
+x | indice per le colonne | intero naturale >= 4 <= 9
+y | indice per le righe | intero naturale >= 7 <= 9
+
+Tipi di dato:
+Griglia:
+	ga | Prima griglia del triple doku | matrice di interi 
+	gb | Seconda griglia del triple doku | matrice di interi
+	gc | Terza griglia del triple doku | matrice di interi
+	n | numero di righe di una singola griglia |  intero Naturale
+
+PSEUDOCODICE
+
+x = 4
+y = 7
+
+MENTRE y < 9
+    MENTRE x < 9
+	campo gb in riga y - 6 colonna x - 3 = campo ga in riga y colonna x
+    	campo gc in riga y - 6 colonna x - 3 = campo gb in riga y colonna x
+	x = x + 1
+    FINE
+y = y + 1
+FINE
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+FUNZIONE generaGrigliaCompleta
+
+Dati di INPUT
+
+Dati di OUTPUT
+grigliaCompleta | tutte le 3 griglie complete e sincronizzate | tipo di dato strutturato Griglia
+
+Dati di LAVORO
+x | indice colonna | intero naturale >= 1 <= 9
+y | indice riga | intero naturale >= 1 <= 9
+numeroCasuale | numero da inserire | intero naturale >= 1 <= 9
+riempiti | contatore di numeri casuali inseriti | intero naturale
+valido | stato di validazione di un numero in una cella | booleano
+n | numero massimo elementi iniziali casuali per ogni griglia | intero naturale = 11
+
+Tipi di dato:
+Griglia:
+	ga | Prima griglia del triple doku | matrice di interi 
+	gb | Seconda griglia del triple doku | matrice di interi
+	gc | Terza griglia del triple doku | matrice di interi
+	n | numero di righe di una singola griglia |  intero Naturale
+
+PSEUDOCODICE
+
+inizializza(campo ga di grigliaCompleta)
+inizializza(campo gb di grigliaCompleta)
+inizializza(campo gc di grigliaCompleta)
+
+riempiti = 0
+
+MENTRE riempiti < n
+    x = numeroCasuale
+    y = numeroCasuale
+
+    valido = controllaValido(campo ga di grigliaCompleta, x, y, numeroCasuale)
+
+    SE (valido = VERO)
+        campo ga di grigliaCompleta in riga y colonna x = numeroCasuale
+        riempiti = riempiti + 1
+    FINE
+FINE
+
+riempiti = 0
+
+MENTRE (riempiti < n)
+    x = numero casuale tra 1 e 9
+    y = numero casuale tra 1 e 9
+    numeroCasuale = numero casuale tra 1 e 9
+
+    valido = controllaValido(campo gb di grigliaCompleta, x, y, numeroCasuale)
+
+    SE (valido = VERO)
+        campo gb di grigliaCompleta in riga y colonna x = numeroCasuale
+        riempiti = riempiti + 1
+    FINE
+FINE
+
+riempiti = 0
+
+MENTRE (riempiti < n)
+    x = numero casuale tra 1 e 9
+    y = numero casuale tra 1 e 9
+    numeroCasuale = numero casuale tra 1 e 9
+
+    valido = controllaValido(campo gc di grigliaCompleta, x, y, numeroCasuale)
+
+    SE (valido = VERO)
+        campo gc di grigliaCompleta in riga y colonna x = numeroCasuale
+        riempiti = riempiti + 1
+    FINE
+FINE
+
+sincronizzaQuadranti(grigliaCompleta)
+
+RISOLVI(campo ga di grigliaCompleta)
+RISOLVI(campo gb di grigliaCompleta)
+RISOLVI(campo gc di grigliaCompleta)
+
+RITORNA grigliaCompleta
+
+FINE
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+FUNZIONE generaGrigliaDiGioco
+
+Dati di INPUT
+grigliaCompleta | tutte le 3 griglie complete già risolte | tipo di dato strutturato Griglia
+difficolta | livello scelto dall’utente | intero naturale compreso tra 1 e 3
+
+Dati di OUTPUT
+grigliaDiGioco | copia parziale delle griglie complete da usare per giocare | tipo di dato strutturato Griglia
+
+Dati di LAVORO
+grigliaParziale | griglia da riempire con celle scoperte | matrice di interi
+x | coordinata colonna da svuotare | intero naturale >= 1 <= 9
+y | coordinata riga da svuotare | intero naturale >= 1 <= 9
+casuale | variabile di lavoro per numeri casuali | intero naturale
+celleDaLasciare | numero di celle da lasciare visibili | intero naturale
+celleDaRimuovere | numero di celle da svuotare | intero naturale
+riempiti | celle già svuotate | intero naturale
+
+Tipi di dato:
+Griglia:
+	ga | Prima griglia del triple doku | matrice di interi 
+	gb | Seconda griglia del triple doku | matrice di interi
+	gc | Terza griglia del triple doku | matrice di interi
+	n | numero di righe di una singola griglia |  intero Naturale
+
+PSEUDOCODICE
+
+SE (difficolta = 1)
+    celleDaLasciare = 30
+FINE
+SE (difficolta = 2)
+    celleDaLasciare = 25
+FINE
+SE (difficolta = 3)
+    celleDaLasciare = 20
+FINE
+
+celleDaRimuovere = 81 - celleDaLasciare
+
+grigliaDiGioco = grigliaCompleta
+
+riempiti = 0
+MENTRE (riempiti < celleDaRimuovere)
+    casuale = numero casuale tra 1 e 9
+    x = casuale
+    casuale = numero casuale tra 1 e 9
+    y = casuale
+
+    SE (campo ga di grigliaDiGioco in riga y colonna x <> 0)
+        campo ga di grigliaDiGioco in riga y colonna x = 0
+        riempiti = riempiti + 1
+    FINE
+FINE
+
+riempiti = 0
+MENTRE (riempiti < celleDaRimuovere)
+    casuale = numero casuale tra 1 e 9
+    x = casuale
+    casuale = numero casuale tra 1 e 9
+    y = casuale
+
+    SE (campo gb di grigliaDiGioco in riga y colonna x <> 0)
+        campo gb di grigliaDiGioco in riga y colonna x = 0
+        riempiti = riempiti + 1
+    FINE
+FINE
+
+riempiti = 0
+MENTRE (riempiti < celleDaRimuovere)
+    casuale = numero casuale tra 1 e 9
+    x = casuale
+    casuale = numero casuale tra 1 e 9
+    y = casuale
+
+    SE (campo gc di grigliaDiGioco in riga y colonna x <> 0)
+        campo gc di grigliaDiGioco in riga y colonna x = 0
+        riempiti = riempiti + 1
+    FINE
+FINE
+
+sincronizzaQuadranti(grigliaDiGioco)
+
+RITORNA grigliaDiGioco
+
+FINE
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+FUNZIONE inserisciNumero
+
+Dati di INPUT
+grigliaCompleta | soluzione del puzzle | tipo di dato strutturato Griglia
+grigliaDiGioco | girglia senza alcuni numeri | tipo di dato strutturato Griglia
+numeroGriglia | numero associato ad una "sottogriglia" della griglia di gioco | intero naturale compreso tra 1 e 3
+numeroInserito | il numero che il giocatore desidera inserire a delle specifiche coordinate | intero naturale >= 1 <= 9
+x | coordinata x dove si vuole inserire il numero | intero naturale >= 1 <= 9 
+y | coordinata y dove si vuole inserire il numero | intero naturale >= 1 <= 9 
+
+
+Dati di OUTPUT
+grigliaDiGioco | griglia di gioco con il numero inserito dall'utente oppure vuota in caso di numero invalido
+
+Dati di LAVORO
+grigliaSelezionataGioco | sottogriglia associata ad un numero | matrice di interi
+grigliaSelezionataCompleta | sottogriglia completa associata ad un numero | matrice di interi
+
+
+Tipi di dato:
+Griglia:
+	ga | Prima griglia del triple doku | matrice di interi 
+	gb | Seconda griglia del triple doku | matrice di interi
+	gc | Terza griglia del triple doku | matrice di interi
+	n | numero di righe di una singola griglia |  intero Naturale
+
+PSEUDOCODICE
+
+SE (numeroGriglia = 1)
+    grigliaSelezionataCompleta = campo ga di grigliaCompleta
+    grigliaSelezionataGioco = campo ga di grigliaDiGioco
+    campo ga di grigliaDiGioco = validaNumero(grigliaSelezionataCompleta,grigliaSelezionataGioco,numeroInserito,x,y)
+FINE
+ALTRIMENTI
+SE (numeroGriglia = 2)
+    grigliaSelezionataCompleta = campo gb di grigliaCompleta
+    grigliaSelezionataGioco = campo gb di grigliaDiGioco
+    campo gb di grigliaDiGioco = validaNumero(grigliaSelezionataCompleta,grigliaSelezionataGioco,numeroInserito,x,y)
+FINE
+ALTRIMENTI
+SE (numeroGriglia = 3)
+    grigliaSelezionataCompleta = campo gc di grigliaCompleta
+    grigliaSelezionataGioco = campo gc di grigliaDiGioco
+    campo gc di grigliaDiGioco = validaNumero(grigliaSelezionataCompleta,grigliaSelezionataGioco,numeroInserito,x,y)
+FINE
+
+FINE
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+FUNZIONE validaNumero
+
+
+Dati di INPUT:
+grigliaSelezionataCompleta | una delle 3 griglie complete selezionate dall'utente da confrontare con il numero che si desidera inserire | matrice di interi
+grigliaSelezionataGioco | una delle 3 griglie di gioco dove si inserirà il numero in caso fosse corretto | matrice di interi
+numeroInserito | il numero che il giocatore desidera inserire a delle specifiche coordinate | intero naturale >= 1 <= 9
+x | coordinata x dove si vuole inserire il numero | intero naturale >= 1 <= 9 
+y | coordinata y dove si vuole inserire il numero | intero naturale >= 1 <= 9 
+
+
+Dati di OUTPUT:
+grigliaSelezionataGioco | griglia di gioco aggiornata col numero inserito, in caso di validità, altrimenti la griglia rimane normale | matrice di interi
+
+
+PSEUDOCODICE
+
+SE( grigliaSelezionataCompleta in riga x colonna y = numeroInserito)
+	grigliaSelezionataGioco in riga x colonna y = numeroInserito
+	FINE
+ALTRIMENTI
+   SE ( grigliaSelezionataCompleta in riga x colonna y <> numeroInserito y AND grigliaSelezionataGioco in riga x colonna y = 0)
+	tentativi = tentativi - 1
+	FINE
+RITORNA grigliaSelezionataGioco
+FINE
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
